@@ -13,13 +13,11 @@ function getArticle(article) {
           console.log(data);
           testArticle = data;
           console.log(testArticle.price);
-
-
+          document.getElementById("price").innerHTML = testArticle.price;
+          document.getElementById("title").innerHTML = testArticle.name;
+          document.getElementById("description").innerHTML = testArticle.description;
+          document.querySelector(".item__img").innerHTML = `<img src="${testArticle.imageUrl}">`;
         }))
-
-
-
-
 }
 
 
