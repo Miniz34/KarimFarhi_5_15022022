@@ -1,23 +1,35 @@
-function getProductTemplate(product) {
-  return `<a href="./product.html?id=${product._id}">
-  <article>
-    <img src="${product.productURL}" alt="Lorem ipsum dolor sit amet, Kanap name1">
-    <h3 class="productName">${product.name}</h3>
-    <p class="productDescription">${product.description}</p>
-  </article>
-  </a>` 
-  }
+// function getProductTemplate(product) {
+//   `<a href="./product.html?id=${produit._id}">
+// <article>
+//   <img src="${produit.imageUrl}" alt="Lorem ipsum dolor sit amet, Kanap name1">
+//   <h3 class="productName">${produit.name}</h3>
+//   <p class="productDescription">${produit.description}</p>
+// </article>
+// </a>`;
+// }
 
-    //Récupération données API
-  fetch("http://localhost:3000/api/products")
-  .then(function(res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .then(function(value) {
-    console.log(value);
-  })
-  .catch(function(err) {
-    // Une erreur est survenue
-  });
+
+// Contacter l'API
+fetch("http://localhost:3000/api/products")
+  .then((response) =>
+    response.json()
+      .then((data) => {
+        console.log(data);
+        // Boucle affichage des objets de l'API
+        for (let produit of data) {
+          document.querySelector('#items').innerHTML += `<a href="./product.html?id=${produit._id}">
+          <article>
+            <img src="${produit.imageUrl}" alt="Lorem ipsum dolor sit amet, Kanap name1">
+            <h3 class="productName">${produit.name}</h3>
+            <p class="productDescription">${produit.description}</p>
+          </article>
+          </a>`;
+        }
+      })
+      .catch(function (error) {
+        document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement."
+      }))
+
+      // // Rédaction flechée catch
+      // .catch((error) =>
+      // document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement."
