@@ -28,5 +28,28 @@ function getArticle(article) {
           }
 
         }))
+  // REPLACER ICI SI BESOIN
+
 }
 
+const getProducts = function () {
+  let selectColors = document.querySelector("#colors").value;
+  let selectQuantity = document.querySelector("#quantity").value;
+  let price = testArticle.price;
+  let itemDetails = {
+    id: id,
+    name: testArticle.name,
+    colorSelected: selectColors,
+    quantity: selectQuantity,
+    price: price,
+    priceTotal: price * selectQuantity
+  }
+  console.log(itemDetails);
+
+}
+
+let addToCart = document.getElementById("addToCart");
+addToCart.addEventListener("click", function (event) {
+  event.preventDefault();
+  getProducts();
+})
