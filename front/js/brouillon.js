@@ -180,3 +180,60 @@ addProductToCart.addEventListener("click", function (event) {
   }
 })
 // fin contenu à replacer
+
+
+
+// const confirmation = () => {
+//   if (confirm(`${selectQuantity} ${selectColors} ${productName} a été ajouté au panier, cliquez sur OK pour y accéder, ou annuler pour retourner sur la page d'accueil. `) && selectQuantity < 2) {
+//     window.location.href = "cart.html";
+//   } else {
+//     window.location.href = "index.html";
+//   }
+// }
+
+
+
+if (checkLocalStorage++) {
+  confirmation();
+} else {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+class Basket {
+  constructor() {
+    let basket = localStorage.getItem("basktet");
+    if (basket == null) {
+      this.basket = []
+    } else {
+      this.basket = JSON.parse(basket);
+    }
+  }
+
+
+
+
+  save() {
+    localStorage.setItem("basket", JSON.stringify(this.basket));
+  }
+
+  add(product) {
+    let foundProduct = this.basket.find(p => p.id == product.id);
+    if (foundProduct != undefined) {
+      foundProduct.quantity++;
+    } else {
+      product.quantity = 1;
+      basket.push(product);
+    }
+    this.saveBasket();
+  }
+}

@@ -32,13 +32,19 @@ function getArticle(article) {
 
 }
 
-const getProducts = function () {
+const getProducts = function ()
+// récupération des valeurs d'articles 
+{
   let selectColors = document.querySelector("#colors").value;
   let selectQuantity = document.querySelector("#quantity").value;
   let price = testArticle.price;
+  let productName = testArticle.name;
+
+  // Tableau articles
+
   let itemDetails = {
     id: id,
-    name: testArticle.name,
+    name: productName,
     colorSelected: selectColors,
     quantity: selectQuantity,
     price: price,
@@ -46,10 +52,62 @@ const getProducts = function () {
   }
   console.log(itemDetails);
 
+  // Fenêtre confirmation, voir comment annuler avec plusieurs "if"
+
+  const confirmation = () => {
+    if (selectQuantity < 2) {
+      alert(`${selectQuantity} ${selectColors} ${productName} a été ajouté au panier, cliquez sur OK pour y accéder, ou annuler pour retourner sur la page d'accueil. `)
+      window.location.href = "cart.html";
+    } else if (selectQuantity >= 2) {
+      alert(`${selectQuantity} ${selectColors} ${productName} ont été ajouté au panier, cliquez sur OK pour y accéder, ou annuler pour retourner sur la page d'accueil. `)
+      window.location.href = "cart.html";
+    } else {
+      window.location.href = "index.html";
+    }
+  }
+
+
+
+  // --------------------------------------------------------------
+  // ----------------------Local Storage --------------------------
+  // --------------------------------------------------------------
+
+  // Convertir données JSON du local storage en données JAVASCRIPT
+  let checkLocalStorage = JSON.parse(localStorage.getItem("product"));
+  console.log(checkLocalStorage);
+
+
+  // Clé existante dans le localstorage (ne rien créer car elle existe déjà)
+
+  if (checkLocalStorage) {
+    checkLocalStorage.push(itemDetails);
+    localStorage.setItem("product", JSON.stringify(checkLocalStorage))
+
+    confirmation();
+
+  } else {
+    // Clé n'existe pas dans le local storage (créer une nouvelle clé)
+    checkLocalStorage = [];
+    checkLocalStorage.push(itemDetails);
+    localStorage.setItem("product", JSON.stringify(checkLocalStorage));
+
+    console.log(checkLocalStorage);
+  }
+
+
+
 }
+
+// Fonction ajouter au panier avec écoute du clic
 
 let addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function (event) {
-  event.preventDefault();
+  event.preventDefault();      // <<<<< Pas la moindre idée de l'utilité de cette ligne
   getProducts();
+
+
+
 })
+
+
+
