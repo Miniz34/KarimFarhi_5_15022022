@@ -123,21 +123,60 @@ console.log(object);
 
 // même résultat mais fléché
 
-    // const promiseGetProducts = new Promise((resolve, reject) => {
-    //   setTimeout(function() {
-    //   if(object == 'hello world'){
-    //     resolve(object);
-    //   }else{
-    //     reject("accès aux objets impossible")
-    //      }
-    //   }, 2000);
-    // });
+// const promiseGetProducts = new Promise((resolve, reject) => {
+//   setTimeout(function() {
+//   if(object == 'hello world'){
+//     resolve(object);
+//   }else{
+//     reject("accès aux objets impossible")
+//      }
+//   }, 2000);
+// });
 
 
-    // promiseGetProducts.then((o) => {
-    //   console.log(o);
-    //   return console.log("sup");
-    // })
-    // .catch((n) => {
-    //   console.log(n);
-    // });
+// promiseGetProducts.then((o) => {
+//   console.log(o);
+//   return console.log("sup");
+// })
+// .catch((n) => {
+//   console.log(n);
+// });
+
+
+
+
+
+
+
+
+
+
+
+// replacer plus haut si besoin
+const addProductToCart = document.getElementById("addToCart");
+addProductToCart.addEventListener("click", function (event) {
+  event.preventDefault();
+  console.log("test");
+  let selectColors = document.querySelector("#colors").value;
+  let selectQuantity = document.querySelector("#quantity").value;
+  let price = testArticle.price;
+  let itemDetails = {
+    id: id,
+    name: testArticle.name,
+    colorSelected: selectColors,
+    quantity: selectQuantity,
+    price: price,
+    priceTotal: price * selectQuantity
+  }
+  console.log(itemDetails);
+
+  const addToLocalStorage = function () {
+
+    const addProductCart = document.getElementById("addToCart");
+    addProductCart.addEventListener("click", function () {
+      addToLocalStorage();
+      console.log(quantity);
+    })
+  }
+})
+// fin contenu à replacer
