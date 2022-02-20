@@ -19,6 +19,7 @@ function getArticle(article) {
           document.getElementById("title").textContent = testArticle.name;
           document.getElementById("description").textContent = testArticle.description;
           document.querySelector(".item__img").innerHTML = `<img src="${testArticle.imageUrl}">`;
+          document.querySelector("title").innerHTML = testArticle.name;
           // Boucle affichage des couleurs
           for (let colors of testArticle.colors) {
             let colorProduct = document.createElement("option");
@@ -40,6 +41,7 @@ function getArticle(article) {
   // REPLACER ICI SI BESOIN
 
 
+
 }
 
 const getProducts = function ()
@@ -54,11 +56,11 @@ const getProducts = function ()
 
   let itemDetails = {
     id: id,
-    name: productName,
-    colorSelected: selectColors,
-    quantity: selectQuantity,
-    price: price,
-    priceTotal: price * selectQuantity
+    // name: productName,
+    colorSelected: selectColors.value,
+    quantity: selectQuantity.value,
+    // price: price,
+    // priceTotal: price * selectQuantity
   }
   console.log(itemDetails);
 
@@ -73,6 +75,8 @@ const getProducts = function ()
     }
   }
   let checkLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+
 
   const initStorage = () => {
     checkLocalStorage = [];
@@ -103,23 +107,31 @@ const getProducts = function ()
   console.log(itemDetails.colorSelected.value)
   console.log(selectColors)
   console.log(selectColors.value)
-  console.log(selectColors)
 
 
-  if (selectColors.value == "" || selectQuantity.value == 0 || selectQuantity.value >= 100) {
-    alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
-  } //else if (condition de répétition id et couleur) {
-  // addItemStorage();}
-  else if (checkLocalStorage) {
-    addStorage();
+
+  if (selectColors.value != "" && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
+    if (checkLocalStorage) {
+      addStorage();
+      // confirmation();
+    } //else if (condition de répétition id et couleur) (selectColors.value == itemDetails && id == itemDetails[1].id) {
+    // //addItemStorage() confirmation();}
+    else {
+      initStorage();
+      // confirmation();
+    }
   } else {
-    initStorage();
+    alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
   }
 
 
 
 
+  console.log(selectColors.value);
+
 }
+
+
 
 // Fonction ajouter au panier avec écoute du clic
 

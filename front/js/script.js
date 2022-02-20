@@ -16,6 +16,8 @@ fetch("http://localhost:3000/api/products")
       .then((data) => {
         console.log(data);
         // Boucle affichage des objets de l'API
+
+
         for (let produit of data) {
           document.querySelector('#items').innerHTML += `<a href="./product.html?id=${produit._id}">
           <article>

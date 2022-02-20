@@ -1,11 +1,12 @@
-const getProduct = JSON.parse(localStorage.getItem("product"));
-
-console.log(getProduct);
-
 const articles = document.getElementById("cart__items");
-console.log(articles);
-
-
+const getProduct = JSON.parse(localStorage.getItem("product"));
+fetch("http://localhost:3000/api/products/")
+  .then((response) =>
+    response.json()
+      .then((data) => {
+        cartArticle = data;
+        console.log(cartArticle);
+      }))
 
 
 if (getProduct === null) {

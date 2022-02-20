@@ -538,12 +538,40 @@ else {
 
 
 
-  // if (checkLocalStorage[1].id == itemDetails.id && checkLocalStorage[1].colorSelected == itemDetails.colorSelected) {
-  //   // console.log("YOUHOU") ----AJOUTER QUANTITE ONLY, DEMANDER DE L'AIDE PCQ JE SUIS UNE MERDE---
+if (checkLocalStorage[1].id == itemDetails.id && checkLocalStorage[1].colorSelected == itemDetails.colorSelected) {
+  // console.log("YOUHOU") ----AJOUTER QUANTITE ONLY, DEMANDER DE L'AIDE PCQ JE SUIS UNE MERDE---
 
-  // } else if (selectColors.value != undefined && selectQuantity.value != 0) {
-  //   console.log("ajouter objets")
-  //   // addStorage()
+} else if (selectColors.value != undefined && selectQuantity.value != 0) {
+  console.log("ajouter objets")
+  // addStorage()
+} else {
+  console.log("plein le cul")
+}
+
+
+
+
+
+
+
+
+
+  // if (selectColors.value == "" || selectQuantity.value == 0 || selectQuantity.value >= 100) {
+  //   alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
+  // } //else if (condition de répétition id et couleur) {
+  // // addItemStorage();}
+  // else if (checkLocalStorage) {
+  //   addStorage();
   // } else {
-  //   console.log("plein le cul")
+  //   initStorage();
+  // }
+
+  // if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1)) && (checkLocalStorage)) {
+  //   if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1))) {
+  //     addStorage();
+  //   } else {
+  //     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
+  //   }
+  // } else {
+  //   initStorage();
   // }
