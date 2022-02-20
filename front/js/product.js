@@ -52,15 +52,19 @@ const getProducts = function ()
   let price = testArticle.price;
   let productName = testArticle.name;
   let productId = testArticle._id;
+  let imgUrl = testArticle.imageUrl;
+  console.log(imgUrl);
   // Tableau articles
 
   let itemDetails = {
     id: id,
-    // name: productName,
+    name: productName,
     colorSelected: selectColors.value,
     quantity: selectQuantity.value,
-    // price: price,
-    // priceTotal: price * selectQuantity
+    price: price,
+    priceTotal: price * selectQuantity,
+    urlImg: imgUrl
+
   }
   console.log(itemDetails);
 
@@ -109,7 +113,6 @@ const getProducts = function ()
   console.log(selectColors.value)
 
 
-
   if (selectColors.value != "" && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
     if (checkLocalStorage) {
       addStorage();
@@ -124,10 +127,6 @@ const getProducts = function ()
     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
   }
 
-
-
-
-  console.log(selectColors.value);
 
 }
 

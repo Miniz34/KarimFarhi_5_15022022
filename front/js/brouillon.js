@@ -556,22 +556,74 @@ if (checkLocalStorage[1].id == itemDetails.id && checkLocalStorage[1].colorSelec
 
 
 
-  // if (selectColors.value == "" || selectQuantity.value == 0 || selectQuantity.value >= 100) {
-  //   alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
-  // } //else if (condition de répétition id et couleur) {
-  // // addItemStorage();}
-  // else if (checkLocalStorage) {
-  //   addStorage();
-  // } else {
-  //   initStorage();
-  // }
+// if (selectColors.value == "" || selectQuantity.value == 0 || selectQuantity.value >= 100) {
+//   alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
+// } //else if (condition de répétition id et couleur) {
+// // addItemStorage();}
+// else if (checkLocalStorage) {
+//   addStorage();
+// } else {
+//   initStorage();
+// }
 
-  // if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1)) && (checkLocalStorage)) {
-  //   if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1))) {
-  //     addStorage();
-  //   } else {
-  //     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
-  //   }
-  // } else {
-  //   initStorage();
-  // }
+// if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1)) && (checkLocalStorage)) {
+//   if ((selectColors.value != "" || (selectQuantity.value <= 100 && selectQuantity.value >= 1))) {
+//     addStorage();
+//   } else {
+//     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
+//   }
+// } else {
+//   initStorage();
+// }
+
+
+
+// if (getProduct[i].id == getProduct[i].id) {
+//     console.log("répétition")
+//   } else {
+//     console.log("pas de répétition")
+//   }
+
+
+
+
+console.log(checkLocalStorage[1].quantity);
+const testPush = function () {
+  checkLocalStorage[1].quantity = checkLocalStorage[1].quantity + 1;
+}
+testPush();
+
+
+
+
+
+
+// --------------TEST REPETITION LOCAL STORAGE-----------------------
+
+for (let i in checkLocalStorage) {
+  // console.log(checkLocalStorage[i].id)
+  // console.log(itemDetails.id);
+  // console.log(checkLocalStorage[i].colorSelected)
+  // console.log(itemDetails.colorSelected)
+  if (checkLocalStorage[i].id != itemDetails.id || checkLocalStorage[i].colorSelected != itemDetails.colorSelected) {
+    console.log("no repetition");
+  } else {
+    console.log("repetition");
+  }
+
+
+}
+
+const productFind = checkLocalStorage.find(
+  (el) => el.id === id && el.selectColors === selectColors);
+console.log(productFind);
+
+if (productFind) {
+  let newQuantity = parseInt(itemDetails.quantity) + parseInt(productFind.quantity);
+  productFind.quantity = newQuantity;
+  addStorage();
+} else {
+  addItemStorage();
+  console.table(checkLocalStorage);
+
+}
