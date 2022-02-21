@@ -110,6 +110,177 @@ if (getProduct === null) {
 
 
 
-// ------------Validation des données---------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ------------Validation du formulaire --------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+// ---------------------------------------------------------
+
+
+
+// let formTest = document.querySelector(".cart__order__form__question");
+// console.log(form.firstChild.nextSibling.firstName);
+// console.log(form.firstName);
+
+// ---------------------------------------------------------
+// ------------Selection input formulaire ------------------
+// ---------------------------------------------------------
+
+let formFirstName = document.querySelector("#firstName");
+console.log(formFirstName);
+
+// selection input nom
+let formLastName = document.querySelector("#lastName");
+console.log(formLastName);
+
+// Selection input adresse
+let formAddress = document.querySelector("#address");
+console.log(formAddress);
+
+// selection input ville
+let formCity = document.querySelector("#city");
+console.log(formCity);
+
+// selection input email
+let formEmail = document.querySelector("#email");
+console.log(formEmail);
+
+
+// ---------------------------------------------------------
+// ------------Validation des données ----------------------
+// ---------------------------------------------------------
+
+// validation prénom
+formFirstName.addEventListener('change', function () {
+  validNameFirstName(this);
+});
+
+// validation nom
+formLastName.addEventListener('change', function () {
+  validName(this);
+});
+
+// validation adresse
+formAddress.addEventListener('change', function () {
+  validAddress(this);
+});
+
+// validation ville
+formCity.addEventListener('change', function () {
+  validCity(this);
+});
+
+// validation email
+formEmail.addEventListener('change', function () {
+  validEmail(this);
+});
+
+// ---------------------------------------------------------
+// ------------Fonction vérifications des données-----------
+// ---------------------------------------------------------
+
+// G DONNE UNE SEQUENCE TRUE/FALSE, DEMANDER POURQUOI
+// let nameFirstName = /^([A-Za-z][A-Za-z ,.'-]*){2,}$/g;                /^[a-zA-Z]{2,20}$/;       ;  <<< bonne version
+const nameFirstName = /[A-Za-z -]{2,128}$/;
+const addressRegex = /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
+const cityRegex = /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
+const emailRegex = /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
+
+
+// Regarder pour regrouper ces fonctions
+
+// Vérification du prénom
+const validNameFirstName = function (validityName) {
+  let testFirstName = nameFirstName.test(validityName.value);
+  console.log(testFirstName);
+
+  let testErrorName = nameFirstName.test(validityName.value);
+  let error = formFirstName.nextElementSibling;
+  console.log(error);
+  if (testErrorName) {
+    error.style.color = "#006600";
+    error.innerHTML = `Prénom valide`;     // voir si je peux : error.classList.add('.text-succes');  sans
+  } else if (validityName.value.length < 2) {
+    error.style.color = "";
+    error.textContent = "PLUS DE 2";
+  } else {
+    error.style.color = "";
+    error.textContent = "Prénom invalide : veuillez n'utiliser que des lettres";
+  }
+}
+
+// Vérification du nom
+const validName = function (validityNom) {
+  let testNom = nameFirstName.test(validityNom.value);
+  console.log(testNom);
+
+  let testErrorNom = nameFirstName.test(validityNom.value);
+  let error = formLastName.nextElementSibling;
+  console.log(error);
+  if (testErrorNom) {
+    error.style.color = "#006600";
+    error.innerHTML = `Nom valide`;
+  } else {
+    error.textContent = "Nom invalide : veuillez n'utiliser que des lettres";
+  }
+}
+
+// Vérification de l'adresse
+const validAddress = function (validityAddress) {
+  let testAddress = addressRegex.test(validityAddress.value);
+  console.log(testAddress);
+
+  let testErrorAddress = addressRegex.test(validityAddress.value);
+  let error = formAddress.nextElementSibling;
+  console.log(error);
+  if (testErrorAddress) {
+    error.style.color = "#006600";
+    error.innerHTML = `Valide`;
+  } else {
+    error.textContent = "Adresse invalide";
+  }
+}
+
+// Vérification de la ville
+const validCity = function (validityCity) {
+  let testCity = cityRegex.test(validityCity.value);
+  console.log(testCity);
+
+  let testErrorCity = addressRegex.test(validityCity.value);
+  let error = formCity.nextElementSibling;
+  console.log(error);
+  if (testErrorCity) {
+    error.style.color = "#006600";
+    error.innerHTML = `Nom de ville valide`;
+  } else {
+    error.textContent = "Ville invalide";
+  }
+}
+
+// Vérification de l'email
+const validEmail = function (validityEmail) {
+  let testEmail = emailRegex.test(validityEmail.value);
+  console.log(testEmail);
+
+  let testErrorEmail = addressRegex.test(validityEmail.value);
+  let error = formEmail.nextElementSibling;
+  console.log(error);
+  if (testErrorEmail) {
+    error.style.color = "#006600";
+    error.innerHTML = `Adresse mail valide`;
+  } else {
+    error.textContent = "Adresse mail invalide: veuillez renseigner une adresse mail au format xxxxx@xxx.xx";
+  }
+}
+
+
+// let testErrorName = nameFirstName.test(validityName.value);
+// console.log(testErrorName);
+// console.log(nameFirstName.test);
+
 
 

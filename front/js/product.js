@@ -68,7 +68,7 @@ const getProducts = function ()
   }
   console.log(itemDetails);
 
-  // Fenêtre confirmation, voir comment annuler avec plusieurs "if"
+  // Fenêtre confirmation
 
   const confirmation = () => {
     if (confirm(` Votre commande de ${selectQuantity} ${selectColors} ${productName} a été ajouté au panier, 
