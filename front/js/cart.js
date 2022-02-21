@@ -149,34 +149,50 @@ console.log(formCity);
 let formEmail = document.querySelector("#email");
 console.log(formEmail);
 
+// selection formulaire
+let form = document.querySelector(".cart__order__form");
+console.log(form);
+
 
 // ---------------------------------------------------------
 // ------------Validation des données ----------------------
 // ---------------------------------------------------------
 
-// validation prénom
+// écoute validation prénom
 formFirstName.addEventListener('change', function () {
   validNameFirstName(this);
 });
 
-// validation nom
+// écoute validation nom
 formLastName.addEventListener('change', function () {
   validName(this);
 });
 
-// validation adresse
+// écoute validation adresse
 formAddress.addEventListener('change', function () {
   validAddress(this);
 });
 
-// validation ville
+// écoute validation ville
 formCity.addEventListener('change', function () {
   validCity(this);
 });
 
-// validation email
+// écoute validation email
 formEmail.addEventListener('change', function () {
   validEmail(this);
+});
+
+// écoute validation formulaire complet
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  if (validNameFirstName(formFirstName) && validName(formLastName) && validAddress(formAddress) && validCity(formCity) && validEmail(formEmail)) {
+    form.submit();
+    console.log("Données valides")
+  } else {
+    console.log("Données invalides")
+    alert("Merci de vérifier les informations que vous avez renseigner");
+  }
 });
 
 // ---------------------------------------------------------
@@ -186,9 +202,9 @@ formEmail.addEventListener('change', function () {
 // G DONNE UNE SEQUENCE TRUE/FALSE, DEMANDER POURQUOI
 // let nameFirstName = /^([A-Za-z][A-Za-z ,.'-]*){2,}$/g;                /^[a-zA-Z]{2,20}$/;       ;  <<< bonne version
 const nameFirstName = /[A-Za-z -]{2,128}$/;
-const addressRegex = /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
-const cityRegex = /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
-const emailRegex = /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
+const addressRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
+const cityRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
+const emailRegex = /[A-Za-z -]{2,128}$/;                           // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
 
 
 // Regarder pour regrouper ces fonctions
@@ -203,13 +219,16 @@ const validNameFirstName = function (validityName) {
   console.log(error);
   if (testErrorName) {
     error.style.color = "#006600";
-    error.innerHTML = `Prénom valide`;     // voir si je peux : error.classList.add('.text-succes');  sans
+    error.innerHTML = `Prénom valide`;     // voir si je peux : error.classList.add('.text-succes'); sans bootstrap;
+    return true;
   } else if (validityName.value.length < 2) {
     error.style.color = "";
-    error.textContent = "PLUS DE 2";
+    error.textContent = "Veuillez renseigner plus de 2 lettres";
+    return false;
   } else {
     error.style.color = "";
     error.textContent = "Prénom invalide : veuillez n'utiliser que des lettres";
+    return false;
   }
 }
 
@@ -224,8 +243,15 @@ const validName = function (validityNom) {
   if (testErrorNom) {
     error.style.color = "#006600";
     error.innerHTML = `Nom valide`;
+    return true;
+  } else if (validityName.value.length < 2) {
+    error.style.color = "";
+    error.textContent = "Veuillez renseigner plus de 2 lettres";
+    return false;
   } else {
+    error.style.color = "";
     error.textContent = "Nom invalide : veuillez n'utiliser que des lettres";
+    return false;
   }
 }
 
@@ -240,8 +266,11 @@ const validAddress = function (validityAddress) {
   if (testErrorAddress) {
     error.style.color = "#006600";
     error.innerHTML = `Valide`;
+    return true;
   } else {
+    error.style.color = "";
     error.textContent = "Adresse invalide";
+    return false;
   }
 }
 
@@ -256,8 +285,11 @@ const validCity = function (validityCity) {
   if (testErrorCity) {
     error.style.color = "#006600";
     error.innerHTML = `Nom de ville valide`;
+    return true;
   } else {
+    error.style.color = "";
     error.textContent = "Ville invalide";
+    return false;
   }
 }
 
@@ -272,8 +304,11 @@ const validEmail = function (validityEmail) {
   if (testErrorEmail) {
     error.style.color = "#006600";
     error.innerHTML = `Adresse mail valide`;
+    return true;
   } else {
+    error.style.color = "";
     error.textContent = "Adresse mail invalide: veuillez renseigner une adresse mail au format xxxxx@xxx.xx";
+    return false;
   }
 }
 
