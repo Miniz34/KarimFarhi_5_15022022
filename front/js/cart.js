@@ -188,10 +188,12 @@ form.addEventListener('submit', function (e) {
   e.preventDefault();
   if (validNameFirstName(formFirstName) && validName(formLastName) && validAddress(formAddress) && validCity(formCity) && validEmail(formEmail)) {
     form.submit();
-    console.log("Données valides")
+    console.log("Données valides");
+    window.location = "confirmation.html";
+
   } else {
     console.log("Données invalides")
-    alert("Merci de vérifier les informations que vous avez renseigner");
+    alert("Merci de vérifier les informations que vous avez renseigné");
   }
 });
 

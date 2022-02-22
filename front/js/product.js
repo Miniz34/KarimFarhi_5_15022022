@@ -71,7 +71,7 @@ const getProducts = function ()
   // Fenêtre confirmation
 
   const confirmation = () => {
-    if (confirm(` Votre commande de ${selectQuantity} ${selectColors} ${productName} a été ajouté au panier, 
+    if (confirm(` Votre commande de ${selectQuantity} ${selectColors} ${productName} a été ajoutée au panier, 
     cliquez sur OK pour y accéder, ou annuler pour retourner sur la page d'accueil. `)) {
       window.location.href = "cart.html";
     } else {
@@ -88,15 +88,26 @@ const getProducts = function ()
     localStorage.setItem("product", JSON.stringify(checkLocalStorage));
   }
 
-  const addStorage = () => {
-    checkLocalStorage.push(itemDetails);
-    localStorage.setItem("product", JSON.stringify(checkLocalStorage))
-  }
+  // const addStorage = () => {
+  //   checkLocalStorage.push(itemDetails);
+  //   localStorage.setItem("product", JSON.stringify(checkLocalStorage))
+  // }
+
 
   const addItemStorage = () => {
-    checkLocalStorage.push(itemDetails);          //--------Comprendre comment faire cette fonction-----------
-    localStorage.setItem("product", JSON.stringify(checkLocalStorage))
+    checkLocalStorage.push(itemDetails);
+    var data = JSON.parse(localStorage.getItem("product"));
+    let index = data.findIndex(item => item.id == itemDetails.id && item.colorSelected == itemDetails.colorSelected);           //Fonction qui déclare condition, et renvoi premier index qui valide condition
+    if (index > -1) {                                                                                                           // Renvoi -1 si "index" ne trouve rien
+      data[index].quantity = parseInt(selectQuantity.value) + parseInt(data[index].quantity);                                    //Array[fonction findex].titre d'objet
+      console.log(typeof (data[index].quantity));
+      localStorage.setItem("product", JSON.stringify(data));
+    } else {
+      localStorage.setItem("product", JSON.stringify(checkLocalStorage));
+    }
+
   }
+
   // console.log(checkLocalStorage[1].id); //<<<<<<<<< IMPORTANT
   // console.log(itemDetails.id);
   // console.log(checkLocalStorage[1].colorSelected);
@@ -115,22 +126,21 @@ const getProducts = function ()
 
   if (selectColors.value != "" && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
     if (checkLocalStorage) {
-      addStorage();
-      // confirmation();
-    } //else if (condition de répétition id et couleur) (selectColors.value == itemDetails && id == itemDetails[1].id) {
-    // //addItemStorage() confirmation();}
-    else {
+      addItemStorage();
+      confirmation();
+      // } else if (index > -1) { //(selectColors.value == itemDetails && id == itemDetails[1].id);
+      //   data[index].quantity += 1;
+      //   addItemStorage();
+      //   confirmation();
+    } else {
       initStorage();
-      // confirmation();
+      confirmation();
     }
   } else {
     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
   }
 
-
 }
-
-
 
 // Fonction ajouter au panier avec écoute du clic
 
@@ -142,7 +152,5 @@ addToCart.addEventListener("click", function (event) {
 
 
 })
-
-
 
 
