@@ -18,8 +18,8 @@ function getArticle(article) {
           document.getElementById("price").textContent = testArticle.price;
           document.getElementById("title").textContent = testArticle.name;
           document.getElementById("description").textContent = testArticle.description;
-          document.querySelector(".item__img").innerHTML = `<img src="${testArticle.imageUrl}">`;
-          document.querySelector("title").innerHTML = testArticle.name;
+          document.querySelector(".item__img").innerHTML = `<img src="${testArticle.imageUrl}">`;              ////rajouter le alt
+          document.querySelector("title").textContent = testArticle.name;
           // Boucle affichage des couleurs
           for (let colors of testArticle.colors) {
             let colorProduct = document.createElement("option");
@@ -33,7 +33,12 @@ function getArticle(article) {
             // console.log(testArticle.price)
             // console.log(colorProduct.value)
           }
-
+          // let select = document.getElementById('colors');
+          // for (const color of product.colors) {
+          //     let option = document.createElement("option");
+          //     option.text = color;
+          //     select.add(option);
+          // }
 
 
 
@@ -66,6 +71,7 @@ const getProducts = function ()
     urlImg: imgUrl
 
   }
+
   console.log(itemDetails);
 
   // Fenêtre confirmation
@@ -124,7 +130,7 @@ const getProducts = function ()
   console.log(selectColors.value)
 
 
-  if (selectColors.value != "" && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
+  if (selectColors.value && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
     if (checkLocalStorage) {
       addItemStorage();
       confirmation();

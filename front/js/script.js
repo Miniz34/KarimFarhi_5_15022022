@@ -29,7 +29,7 @@ fetch("http://localhost:3000/api/products")
         }
       })
       .catch(function (error) {
-        document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement."
+        document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement." + error;
       }))
 
       // // Rédaction flechée catch

@@ -627,3 +627,268 @@ if (productFind) {
   console.table(checkLocalStorage);
 
 }
+
+
+
+// function modifyQtt() {
+//   let qttModif = document.querySelectorAll(".itemQuantity");
+
+//   for (let k = 0; k < qttModif.length; k++) {
+//     qttModif[k].addEventListener("change", (event) => {
+//       event.preventDefault();
+
+//       //Selection de l'element à modifier en fonction de son id ET sa couleur
+//       let quantityModif = produitLocalStorage[k].quantiteProduit;
+//       let qttModifValue = qttModif[k].valueAsNumber;
+
+//       const resultFind = getProduct.find((el) => el.qttModifValue !== quantityModif);
+
+//       resultFind.quantity = qttModifValue;
+//       produitLocalStorage[k].quantity = resultFind.quantity;
+
+//       localStorage.setItem("produit", JSON.stringify(getProduct));
+
+//       // refresh rapide
+//       location.reload();
+//     })
+//   }
+// }
+// modifyQtt();
+
+
+
+
+document.addEventListener("change", function (event) {
+  var qty = document.querySelector(".itemQuantity");
+  console.log("TEST")
+  let qtyValue = document.querySelector(".itemQuantity").value;
+  EventTarget.closest = "+1";
+  let x = event.target.value;
+  console.log(x);
+  console.log(qtyValue);
+  console.log(qty);
+  var newQty = qty.closest("div").firstChild.nextSibling;
+  console.log(newQty);
+  var child = newQty.firstChild;
+  console.log(child);
+  var data = JSON.parse(localStorage.getItem("product"));
+  console.log(data);
+  let index = data.findIndex(item => item.id == cartArticle.id && item.colorSelected == cartArticle.colorSelected);
+  if (index < 1) {
+    data[index].quantity = qtyValue;
+    localStorage.setItem("product", JSON.stringify(data));
+    // var sibling = child.nextSibling;
+    // console.log(sibling);
+    newQty.innerHTML = qtyValue;
+  }
+  let foundProduct = data.find(item => item.id == cartArticle.id && item.colorSelected == cartArticle.colorSelected);
+  if (foundProduct != undefined) {
+    foundProduct.quantity = qtyValue;
+    localStorage.setItem("product", JSON.stringify(data));
+  }
+
+});
+
+
+
+
+
+let b = EventTarget.article;
+console.log(b);
+
+// let parentQty = document.getElementsByClassName("cart__item");
+// let childQty = parentQty.getElementsByClassName("itemQuantity");
+// let childQtyA = parentQty.getElementsByClassName("itemquantity")[14];
+// // console.log(parentQty);
+// // console.log(childQty);
+// // console.log(childQtyA);
+// let testChild = parentQty.lastChild;
+// // console.log(testChild);
+// console.log(parentQty.dataset.id)
+
+let allo = document.getElementsByClassName('cart__item');
+console.log(allo);
+const p = document.querySelectorAll("p");
+let testU = document.getElementsByClassName("cart__item__content__settings__quantity");
+console.log(testU);
+let article = document.querySelectorAll("article.cart__item > cart__item__content > cart__item__content__settings > cart__item__content__settings__quantity > p");
+console.log(article);
+let itmquay = document.querySelectorAll("[name=itemQuantity");
+console.log(itmquay)
+
+// console.log(p[1]);
+// p[].innerHTML = "ALLO";
+
+let fuckoff = allo.firstChild;
+console.log(fuckoff);
+
+let qttModif = document.querySelectorAll(".itemQuantity");
+console.log(qttModif);
+
+function modifyQtt() {
+  let qttModif = document.querySelectorAll(".itemQuantity");
+
+  for (let k = 0; k < qttModif.length; k++) {
+    qttModif[k].addEventListener("change", (event) => {
+      event.preventDefault();
+      console.log("MODIF");
+
+      //Selection de l'element à modifier en fonction de son id ET sa couleur
+      let quantityModif = cartArticle[k].quantity;
+      let qttModifValue = qttModif[k].valueAsNumber;
+      console.log(quantityModif);
+
+      const resultFind = cartArticle.find((el) => el.qttModifValue !== quantityModif);
+
+      resultFind.quantiteProduit = qttModifValue;
+      cartArticle[k].quantity = resultFind.quantity;
+
+      localStorage.setItem("produit", JSON.stringify(cartArticle));
+
+      // refresh rapide
+      location.reload();
+    })
+  }
+}
+modifyQtt();
+
+
+
+
+
+
+
+
+function deleteProduct() {
+  let btn_supprimer = document.querySelectorAll(".deleteItem");
+
+  for (let j = 0; j < btn_supprimer.length; j++) {
+    btn_supprimer[j].addEventListener("click", (event) => {
+      event.preventDefault();
+      console.log("hello");
+
+      //Selection de l'element à supprimer en fonction de son id ET sa couleur
+      let idDelete = getProduct[j].id;
+      let colorDelete = getProduct[j].colorSelected;
+
+      getProduct = getProduct.filter(el => el.id !== idDelete || el.colorSelected !== colorDelete);
+
+      localStorage.setItem("produit", JSON.stringify(getProduct));
+
+      console.log(idDelete);
+      console.log(colorDelete);
+      console.log(getProduct[1].id);
+
+      //Alerte produit supprimé et refresh
+      alert("Ce produit a bien été supprimé du panier");
+      location.reload();
+    })
+  }
+}
+deleteProduct();
+
+
+
+
+document.addEventListener("click", function (event) {
+  var qty = document.querySelector(".deleteItem");
+  console.log('hello');
+  //Selection de l'element à supprimer en fonction de son id ET sa couleur
+  let idDelete = getProduct.id;
+  let colorDelete = getProduct.colorSelected;
+
+  getProduct = getProduct.filter(el => el.id !== idDelete || el.colorSelected !== colorDelete);
+
+  localStorage.setItem("produit", JSON.stringify(getProduct));
+
+});
+
+
+
+function postForm() {
+  const btn_commander = document.getElementById("order");
+
+  //Ecouter le panier
+  btn_commander.addEventListener("click", (event) => {
+
+    //Récupération des coordonnées du formulaire client
+    let inputName = document.getElementById('firstName');
+    let inputLastName = document.getElementById('lastName');
+    let inputAdress = document.getElementById('address');
+    let inputCity = document.getElementById('city');
+    let inputMail = document.getElementById('email');
+
+    //Construction d'un array depuis le local storage
+    let idProducts = [];
+    for (let i = 0; i < getProduct.length; i++) {
+      idProducts.push(getProduct[i].idProduit);
+    }
+    console.log(idProducts);
+
+    const order = {
+      contact: {
+        firstName: "bonjours",
+        lastName: inputLastName.value,
+        address: inputAdress.value,
+        city: inputCity.value,
+        email: inputMail.value,
+      },
+      products: idProducts,
+    }
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json"
+      },
+    };
+
+    fetch("http://localhost:3000/api/products/order", options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
+
+        document.location.href = "confirmation.html";
+      })
+      .catch((err) => {
+        alert("Problème avec fetch : " + err.message);
+      });
+  })
+}
+postForm();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ------------Mon delete : fonctionne sur le premier article (sans le localstorage)----------
+function deleteItem() {
+  let deleteBtn = document.querySelectorAll(".deleteItem");
+  for (let j = 0; j < deleteBtn; j++) {
+    console.log(deleteBtn);
+    deleteBtnCard = deleteBtn.closest("div").closest("article");
+    console.log(deleteBtnCard);
+    console.log(deleteBtn);
+    let deleteParent = deleteBtn.parentNode;
+    console.log(deleteParent);
+    deleteBtn.addEventListener("click", function (event) {
+      deleteBtnCard.parentNode.removeChild(deleteBtn);
+      console.log("hello");
+    })
+  };
+  ;
+}
+deleteItem();

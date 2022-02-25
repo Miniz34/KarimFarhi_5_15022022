@@ -1,39 +1,53 @@
 const articles = document.getElementById("cart__items");
-const getProduct = JSON.parse(localStorage.getItem("product"));
+let getProduct = JSON.parse(localStorage.getItem("product"));
+
+// let test = document.getElementsByClassName(".itemQuantity");
+// // let qtyValue = document.querySelector(".itemQuantity").value;
+// // let newQty = qty.closest("div").firstChild.nextSibling;
+// console.log(test);
+// let newQty = test.closest("div").firstChild.nextSibling;
+
+
+
+
+
+
+
+
+
+
 fetch("http://localhost:3000/api/products/")
   .then((response) =>
     response.json()
       .then((data) => {
         cartArticle = data;
         // console.log(cartArticle);
-      }))
-
-
-if (getProduct === null) {
-  const emptyCart = `Le panier est vide`;
-  articles.innerHTML = emptyCart;
-} else {
-
-
-  for (let i in getProduct) {
-
-    let idProduct = getProduct[i].id;
-    let colorProduct = getProduct[i].colorSelected;
-    let nameProduct = getProduct[i].name;
-    let priceProduct = + getProduct[i].price;
-    let quantityProduct = getProduct[i].quantity;
-    let priceTotalProduct = getProduct[i].price * quantityProduct;
-    let imgUrl = getProduct[i].urlImg;
-
-    // console.log(idProduct);
-    // console.log(colorProduct);
-    // console.log(nameProduct);
-    // console.log(priceProduct);
-    // console.log(quantityProduct);
 
 
 
-    articles.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+        if (getProduct === null) {
+          const emptyCart = `Le panier est vide`;
+          articles.innerHTML = emptyCart;
+        } else {
+
+
+
+          for (let i in getProduct) {
+
+
+            // ----Affichage des éléments du panier -----
+
+
+            let idProduct = getProduct[i].id;
+            let colorProduct = getProduct[i].colorSelected;
+            let nameProduct = getProduct[i].name;
+            let priceProduct = getProduct[i].price;
+            let quantityProduct = getProduct[i].quantity;
+            let priceTotalProduct = getProduct[i].price * quantityProduct;
+            let imgUrl = getProduct[i].urlImg;
+
+
+            articles.innerHTML += `<article class="cart__item" data-id="${idProduct}" data-color="${colorProduct}">
                 <div class="cart__item__img">
                   <img src="${imgUrl}" alt="Photographie d'un canapé">
                 </div>
@@ -55,58 +69,84 @@ if (getProduct === null) {
                 </div>
               </article> `
 
-    // if (getProduct[i].id == getProduct[i].id) {
-    //   console.log("répétition")
-    // } else {
-    //   console.log("pas de répétition")
-    // }
-    // console.log(getProduct[i].id);
-    // console.log(getProduct[1].id)
-    // console.log(idProduct.length);
+
+            // ---------------Modification des quantités-------------------
+            document.addEventListener("change", function (event) {
+              let test = document.querySelector(".cart__item__content__settings__quantity")
+              console.log(test);
+              let move = test.firstChild.nextSibling;
+              let x = event.target.value;
+              console.log(x);
+              console.log(move);
+              let qtyValue = move.innerHTML = x;
+              let data = JSON.parse(localStorage.getItem("product"));
+              let index = data.findIndex(item => item.id == cartArticle.id && item.colorSelected == cartArticle.colorSelected);
+              if (index < 1) {
+                data[i].quantity = qtyValue;
+                localStorage.setItem("product", JSON.stringify(data));
+                location.reload();
+
+              }
+            });
 
 
-    // let quantites = getProduct[i].price;
-    // console.log(quantites);
 
-    // console.log(getProduct.length)
-    // console.log(getProduct[i]);
-    // const totalPrice = document.getElementById('totalPrice');
-    // // totalPrice.innerHTML = quantityProduct * priceProduct;
-    // console.log(totalPrice);
+            // ------------------Suppression d'un produit --------------------
+            function deleteProduct() {
+              let deleteBtn = document.querySelectorAll(".deleteItem");
 
+              for (let j = 0; j < deleteBtn.length; j++) {
+                deleteBtn[j].addEventListener("click", (event) => {
+                  event.preventDefault();
 
-    function getTotals() {
+                  //Selection de l'element à supprimer en fonction de son id ET sa couleur
+                  let idDelete = getProduct[j].id;
+                  let colorDelete = getProduct[j].colorSelected;
 
-      // Récupération du total des quantités
-      let quantityTotal = document.getElementsByClassName('itemQuantity');
-      let quantityLength = quantityTotal.length,
-        totalQtt = 0;
+                  getProduct = getProduct.filter(el => el.id !== idDelete || el.colorSelected !== colorDelete);
 
-      for (let i = 0; i < quantityLength; ++i) {
-        totalQtt += quantityTotal[i].valueAsNumber;
-      }
+                  localStorage.setItem("product", JSON.stringify(getProduct));
 
-      let productTotalQuantity = document.getElementById('totalQuantity');
-      productTotalQuantity.innerHTML = totalQtt;
-      // console.log(totalQtt);
-
-      // Récupération du prix total
-      let totalPrice = 0;
-
-      for (let i = 0; i < quantityLength; ++i) {
-        totalPrice += (quantityTotal[i].valueAsNumber * getProduct[i].price);
-      }
-
-      let productTotalPrice = document.getElementById('totalPrice');
-      productTotalPrice.innerHTML = totalPrice;
-      // console.log(totalPrice);
-    }
-    getTotals();
+                  //Alerte produit supprimé et refresh
+                  alert(`Le produit a bien été supprimé du panier`);
+                  location.reload();
+                })
+              }
+            }
+            deleteProduct();
 
 
-  };
+            function getTotals() {
 
-}
+              // Récupération du total des quantités
+              let quantityTotal = document.getElementsByClassName('itemQuantity');
+              let quantityLength = quantityTotal.length,
+                totalQtt = 0;
+
+              for (let i = 0; i < quantityLength; ++i) {
+                totalQtt += quantityTotal[i].valueAsNumber;
+              }
+
+              let productTotalQuantity = document.getElementById('totalQuantity');
+              productTotalQuantity.innerHTML = totalQtt;
+              // console.log(totalQtt);
+
+              // Récupération du prix total
+              let totalPrice = 0;
+
+              for (let i = 0; i < quantityLength; ++i) {
+                totalPrice += (quantityTotal[i].valueAsNumber * getProduct[i].price);
+              }
+
+              let productTotalPrice = document.getElementById('totalPrice');
+              productTotalPrice.innerHTML = totalPrice;
+              // console.log(totalPrice);
+            }
+            getTotals();
+          };
+        }
+      }));
+
 
 
 
@@ -131,27 +171,27 @@ if (getProduct === null) {
 // ---------------------------------------------------------
 
 let formFirstName = document.querySelector("#firstName");
-console.log(formFirstName);
+// console.log(formFirstName);
 
 // selection input nom
 let formLastName = document.querySelector("#lastName");
-console.log(formLastName);
+// console.log(formLastName);
 
 // Selection input adresse
 let formAddress = document.querySelector("#address");
-console.log(formAddress);
+// console.log(formAddress);
 
 // selection input ville
 let formCity = document.querySelector("#city");
-console.log(formCity);
+// console.log(formCity);
 
 // selection input email
 let formEmail = document.querySelector("#email");
-console.log(formEmail);
+// console.log(formEmail);
 
 // selection formulaire
 let form = document.querySelector(".cart__order__form");
-console.log(form);
+// console.log(form);
 
 
 // ---------------------------------------------------------
@@ -320,4 +360,10 @@ const validEmail = function (validityEmail) {
 // console.log(nameFirstName.test);
 
 
+
+// let realQuantity = document.querySelector(".cart__item__content__settings__quantity");
+// console.log(realQuantity.firstElementChild);
+
+// let realA = document.querySelector(".cart__item__content");
+// console.log(realA);
 
