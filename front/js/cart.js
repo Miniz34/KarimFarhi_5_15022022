@@ -1,14 +1,8 @@
 const articles = document.getElementById("cart__items");
 let getProduct = JSON.parse(localStorage.getItem("product"));
 
-// let test = document.getElementsByClassName(".itemQuantity");
-// // let qtyValue = document.querySelector(".itemQuantity").value;
-// // let newQty = qty.closest("div").firstChild.nextSibling;
-// console.log(test);
-// let newQty = test.closest("div").firstChild.nextSibling;
 
-
-
+console.log(articles);
 
 
 
@@ -21,7 +15,10 @@ fetch("http://localhost:3000/api/products/")
     response.json()
       .then((data) => {
         cartArticle = data;
-        // console.log(cartArticle);
+
+
+
+
 
 
 
@@ -32,19 +29,26 @@ fetch("http://localhost:3000/api/products/")
 
 
 
+
+
+          var prixTotal = 0;
+          var qtyTotal = 0;
           for (let i in getProduct) {
 
-
-            // ----Affichage des éléments du panier -----
-
-
+            // ----Affichage des éléments du panier -----    
             let idProduct = getProduct[i].id;
             let colorProduct = getProduct[i].colorSelected;
             let nameProduct = getProduct[i].name;
-            let priceProduct = getProduct[i].price;
             let quantityProduct = getProduct[i].quantity;
-            let priceTotalProduct = getProduct[i].price * quantityProduct;
             let imgUrl = getProduct[i].urlImg;
+
+            // --- fetch API prix ---
+            let checkProduct = data.find(item => item._id == idProduct);
+            if (checkProduct != undefined) {
+              var priceProduct = checkProduct.price;
+            }
+
+            let priceTotalProduct = priceProduct * getProduct[i].quantity;
 
 
             articles.innerHTML += `<article class="cart__item" data-id="${idProduct}" data-color="${colorProduct}">
@@ -55,11 +59,12 @@ fetch("http://localhost:3000/api/products/")
                   <div class="cart__item__content__description">
                     <h2>${getProduct[i].name}</h2>
                     <p>${colorProduct}</p>
-                    <p>${priceTotalProduct}</p>
+                    <p>${priceTotalProduct} €</p>
+                    
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
-                      <p>Qté : ${getProduct[i].quantity} </p>
+                      <p>${getProduct[i].quantity} </p>
                       <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${getProduct[i].quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
@@ -70,84 +75,68 @@ fetch("http://localhost:3000/api/products/")
               </article> `
 
 
-            // ---------------Modification des quantités-------------------
-            document.addEventListener("change", function (event) {
-              let test = document.querySelector(".cart__item__content__settings__quantity")
-              console.log(test);
-              let move = test.firstChild.nextSibling;
-              let x = event.target.value;
-              console.log(x);
-              console.log(move);
-              let qtyValue = move.innerHTML = x;
-              let data = JSON.parse(localStorage.getItem("product"));
-              let index = data.findIndex(item => item.id == cartArticle.id && item.colorSelected == cartArticle.colorSelected);
-              if (index < 1) {
-                data[i].quantity = qtyValue;
-                localStorage.setItem("product", JSON.stringify(data));
-                location.reload();
+            // ------- addition des prix pour total-----
+            prixTotal = priceTotalProduct + prixTotal;
+            console.log(prixTotal);
 
+            // ------- addition des quantités pour total-----
+            qtyTotal = parseInt(quantityProduct) + qtyTotal;
+            console.log(qtyTotal);
+            console.log(quantityProduct);
+
+            // ------- affichage des totaux-----
+            let productTotalQuantity = document.getElementById('totalQuantity');
+            productTotalQuantity.innerHTML = qtyTotal;
+
+            let productTotalPrice = document.getElementById('totalPrice');
+            productTotalPrice.innerHTML = prixTotal;
+
+          };
+
+          // ----modif quantités----
+          function updateQty(event) {
+            document.addEventListener("change", (event) => {
+              let qty = document.querySelector(".cart__item__content__settings__quantity");
+              let qtyValueReflected = qty.firstChild.nextSibling;      //<<<<< inutile
+              let qtyValueChoice = event.target.value;
+              let article = event.target.closest('article');
+              let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color)
+              console.log(checkProduct);
+              if (checkProduct != undefined) {
+                checkProduct.quantity = qtyValueChoice;
+                let newQty = qtyValueReflected.innerHTML = qtyValueChoice;    //<<<< inutile
+                localStorage.setItem("product", JSON.stringify(getProduct));
+                location.reload();
               }
             });
 
+          }
+          updateQty();
 
 
-            // ------------------Suppression d'un produit --------------------
-            function deleteProduct() {
-              let deleteBtn = document.querySelectorAll(".deleteItem");
-
-              for (let j = 0; j < deleteBtn.length; j++) {
-                deleteBtn[j].addEventListener("click", (event) => {
-                  event.preventDefault();
-
-                  //Selection de l'element à supprimer en fonction de son id ET sa couleur
-                  let idDelete = getProduct[j].id;
-                  let colorDelete = getProduct[j].colorSelected;
-
-                  getProduct = getProduct.filter(el => el.id !== idDelete || el.colorSelected !== colorDelete);
-
-                  localStorage.setItem("product", JSON.stringify(getProduct));
-
-                  //Alerte produit supprimé et refresh
-                  alert(`Le produit a bien été supprimé du panier`);
-                  location.reload();
-                })
+          // ----- suppression article ------
+          // ----- Obligé de boucler car en querySelectorAll, le addEventListener ne fonctionne pas sans---
+          function deleteQty(event) {
+            let deleteBtn = document.querySelectorAll(".deleteItem");
+            for (let j = 0; j < deleteBtn.length; j++) {
+              deleteBtn[j].addEventListener("click", (event) => {
+                let article = event.target.closest('article');
+                console.log(deleteBtn);
+                console.log(article);
+                let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color);
+                console.log(checkProduct);
+                if (checkProduct != undefined);
+                getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
+                localStorage.setItem("product", JSON.stringify(getProduct));
               }
+              );
             }
-            deleteProduct();
+          }
 
+          deleteQty();
 
-            function getTotals() {
-
-              // Récupération du total des quantités
-              let quantityTotal = document.getElementsByClassName('itemQuantity');
-              let quantityLength = quantityTotal.length,
-                totalQtt = 0;
-
-              for (let i = 0; i < quantityLength; ++i) {
-                totalQtt += quantityTotal[i].valueAsNumber;
-              }
-
-              let productTotalQuantity = document.getElementById('totalQuantity');
-              productTotalQuantity.innerHTML = totalQtt;
-              // console.log(totalQtt);
-
-              // Récupération du prix total
-              let totalPrice = 0;
-
-              for (let i = 0; i < quantityLength; ++i) {
-                totalPrice += (quantityTotal[i].valueAsNumber * getProduct[i].price);
-              }
-
-              let productTotalPrice = document.getElementById('totalPrice');
-              productTotalPrice.innerHTML = totalPrice;
-              // console.log(totalPrice);
-            }
-            getTotals();
-          };
         }
       }));
-
-
 
 
 // ---------------------------------------------------------
@@ -355,15 +344,6 @@ const validEmail = function (validityEmail) {
 }
 
 
-// let testErrorName = nameFirstName.test(validityName.value);
-// console.log(testErrorName);
-// console.log(nameFirstName.test);
+function post() {
 
-
-
-// let realQuantity = document.querySelector(".cart__item__content__settings__quantity");
-// console.log(realQuantity.firstElementChild);
-
-// let realA = document.querySelector(".cart__item__content");
-// console.log(realA);
-
+}

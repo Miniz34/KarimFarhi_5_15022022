@@ -66,8 +66,8 @@ const getProducts = function ()
     name: productName,
     colorSelected: selectColors.value,
     quantity: selectQuantity.value,
-    price: price,
-    priceTotal: price * selectQuantity,
+    // price: price,
+    // priceTotal: price * selectQuantity,
     urlImg: imgUrl
 
   }
@@ -133,14 +133,14 @@ const getProducts = function ()
   if (selectColors.value && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
     if (checkLocalStorage) {
       addItemStorage();
-      confirmation();
+      // confirmation();
       // } else if (index > -1) { //(selectColors.value == itemDetails && id == itemDetails[1].id);
       //   data[index].quantity += 1;
       //   addItemStorage();
       //   confirmation();
     } else {
       initStorage();
-      confirmation();
+      // confirmation();
     }
   } else {
     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
