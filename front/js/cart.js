@@ -77,12 +77,12 @@ fetch("http://localhost:3000/api/products/")
 
             // ------- addition des prix pour total-----
             prixTotal = priceTotalProduct + prixTotal;
-            console.log(prixTotal);
+            // console.log(prixTotal);
 
             // ------- addition des quantités pour total-----
             qtyTotal = parseInt(quantityProduct) + qtyTotal;
-            console.log(qtyTotal);
-            console.log(quantityProduct);
+            // console.log(qtyTotal);
+            // console.log(quantityProduct);
 
             // ------- affichage des totaux-----
             let productTotalQuantity = document.getElementById('totalQuantity');
@@ -95,8 +95,9 @@ fetch("http://localhost:3000/api/products/")
 
           // ----modif quantités----
           function updateQty(event) {
-            document.addEventListener("change", (event) => {
-              let qty = document.querySelector(".cart__item__content__settings__quantity");
+            let qty = document.querySelector(".cart__item__content__settings__quantity");
+            qty.addEventListener("change", (event) => {
+
               let qtyValueReflected = qty.firstChild.nextSibling;      //<<<<< inutile
               let qtyValueChoice = event.target.value;
               let article = event.target.closest('article');
@@ -212,13 +213,63 @@ formEmail.addEventListener('change', function () {
   validEmail(this);
 });
 
+
+function postOrder() {
+
+  let send = document.getElementById("order");
+  send.addEventListener("click", function (event) {
+    event.preventDefault();
+    let productsId = [];
+    for (let i = 0; i < getProduct.length; i++) {
+      productsId.push(getProduct[i].id);
+    }
+    console.log(productsId);
+
+    let clientData = {
+      contact: {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        email: document.getElementById("email").value,
+      },
+      products: productsId,
+    }
+
+    console.log(clientData)
+
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(clientData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+
+        // localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
+        console.log(data);
+
+        document.location.href = "confirmation.html";
+      })
+      .catch((err) => {
+        alert("Problème avec fetch : " + err.message);
+      });
+
+  });
+}
+
+
 // écoute validation formulaire complet
 form.addEventListener('submit', function (e) {
   e.preventDefault();
   if (validNameFirstName(formFirstName) && validName(formLastName) && validAddress(formAddress) && validCity(formCity) && validEmail(formEmail)) {
-    form.submit();
-    console.log("Données valides");
-    window.location = "confirmation.html";
+
+    postOrder();
 
   } else {
     console.log("Données invalides")
@@ -243,11 +294,11 @@ const emailRegex = /[A-Za-z -]{2,128}$/;                           // /(?=^.{5,2
 // Vérification du prénom
 const validNameFirstName = function (validityName) {
   let testFirstName = nameFirstName.test(validityName.value);
-  console.log(testFirstName);
+  // console.log(testFirstName);
 
   let testErrorName = nameFirstName.test(validityName.value);
   let error = formFirstName.nextElementSibling;
-  console.log(error);
+  // console.log(error);
   if (testErrorName) {
     error.style.color = "#006600";
     error.innerHTML = `Prénom valide`;     // voir si je peux : error.classList.add('.text-succes'); sans bootstrap;
@@ -266,11 +317,11 @@ const validNameFirstName = function (validityName) {
 // Vérification du nom
 const validName = function (validityNom) {
   let testNom = nameFirstName.test(validityNom.value);
-  console.log(testNom);
+  // console.log(testNom);
 
   let testErrorNom = nameFirstName.test(validityNom.value);
   let error = formLastName.nextElementSibling;
-  console.log(error);
+  // console.log(error);
   if (testErrorNom) {
     error.style.color = "#006600";
     error.innerHTML = `Nom valide`;
@@ -289,11 +340,11 @@ const validName = function (validityNom) {
 // Vérification de l'adresse
 const validAddress = function (validityAddress) {
   let testAddress = addressRegex.test(validityAddress.value);
-  console.log(testAddress);
+  // console.log(testAddress);
 
   let testErrorAddress = addressRegex.test(validityAddress.value);
   let error = formAddress.nextElementSibling;
-  console.log(error);
+  // console.log(error);
   if (testErrorAddress) {
     error.style.color = "#006600";
     error.innerHTML = `Valide`;
@@ -308,11 +359,11 @@ const validAddress = function (validityAddress) {
 // Vérification de la ville
 const validCity = function (validityCity) {
   let testCity = cityRegex.test(validityCity.value);
-  console.log(testCity);
+  // console.log(testCity);
 
   let testErrorCity = addressRegex.test(validityCity.value);
   let error = formCity.nextElementSibling;
-  console.log(error);
+  // console.log(error);
   if (testErrorCity) {
     error.style.color = "#006600";
     error.innerHTML = `Nom de ville valide`;
@@ -327,11 +378,11 @@ const validCity = function (validityCity) {
 // Vérification de l'email
 const validEmail = function (validityEmail) {
   let testEmail = emailRegex.test(validityEmail.value);
-  console.log(testEmail);
+  // console.log(testEmail);
 
   let testErrorEmail = addressRegex.test(validityEmail.value);
   let error = formEmail.nextElementSibling;
-  console.log(error);
+  // console.log(error);
   if (testErrorEmail) {
     error.style.color = "#006600";
     error.innerHTML = `Adresse mail valide`;
@@ -347,3 +398,6 @@ const validEmail = function (validityEmail) {
 function post() {
 
 }
+
+
+
