@@ -1,48 +1,40 @@
+if (localStorage.getItem("product") === "[]") {
+  localStorage.clear();
+}
+
 const articles = document.getElementById("cart__items");
 let getProduct = JSON.parse(localStorage.getItem("product"));
 
 
-console.log(articles);
 
 
-
-
-
-
-
+// ----Contact de l'API pour récupération du prix-----
 fetch("http://localhost:3000/api/products/")
   .then((response) =>
     response.json()
       .then((data) => {
         cartArticle = data;
 
-
-
-
-
-
-
         if (getProduct === null) {
           const emptyCart = `Le panier est vide`;
-          articles.innerHTML = emptyCart;
+          articles.textContent = emptyCart;
         } else {
 
-
-
-
-
+          // Initialisation du total prix et quantité
           var prixTotal = 0;
           var qtyTotal = 0;
+
+
           for (let i in getProduct) {
 
-            // ----Affichage des éléments du panier -----    
+            // ----Affichage des éléments du panier -----
             let idProduct = getProduct[i].id;
             let colorProduct = getProduct[i].colorSelected;
             let nameProduct = getProduct[i].name;
             let quantityProduct = getProduct[i].quantity;
             let imgUrl = getProduct[i].urlImg;
 
-            // --- fetch API prix ---
+            // --- récupération du prix ---
             let checkProduct = data.find(item => item._id == idProduct);
             if (checkProduct != undefined) {
               var priceProduct = checkProduct.price;
@@ -50,7 +42,7 @@ fetch("http://localhost:3000/api/products/")
 
             let priceTotalProduct = priceProduct * getProduct[i].quantity;
 
-
+            // Ajout des articles sur la page
             articles.innerHTML += `<article class="cart__item" data-id="${idProduct}" data-color="${colorProduct}">
                 <div class="cart__item__img">
                   <img src="${imgUrl}" alt="Photographie d'un canapé">
@@ -60,7 +52,6 @@ fetch("http://localhost:3000/api/products/")
                     <h2>${getProduct[i].name}</h2>
                     <p>${colorProduct}</p>
                     <p>${priceTotalProduct} €</p>
-                    
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
@@ -74,38 +65,33 @@ fetch("http://localhost:3000/api/products/")
                 </div>
               </article> `
 
-
             // ------- addition des prix pour total-----
             prixTotal = priceTotalProduct + prixTotal;
-            // console.log(prixTotal);
 
             // ------- addition des quantités pour total-----
             qtyTotal = parseInt(quantityProduct) + qtyTotal;
-            // console.log(qtyTotal);
-            // console.log(quantityProduct);
 
             // ------- affichage des totaux-----
             let productTotalQuantity = document.getElementById('totalQuantity');
-            productTotalQuantity.innerHTML = qtyTotal;
+            productTotalQuantity.textContent = qtyTotal;
 
             let productTotalPrice = document.getElementById('totalPrice');
-            productTotalPrice.innerHTML = prixTotal;
+            productTotalPrice.textContent = prixTotal;
 
           };
+
+
 
           // ----modif quantités----
           function updateQty(event) {
             let qty = document.querySelector(".cart__item__content__settings__quantity");
             qty.addEventListener("change", (event) => {
-
-              let qtyValueReflected = qty.firstChild.nextSibling;      //<<<<< inutile
               let qtyValueChoice = event.target.value;
               let article = event.target.closest('article');
               let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color)
               console.log(checkProduct);
               if (checkProduct != undefined) {
                 checkProduct.quantity = qtyValueChoice;
-                let newQty = qtyValueReflected.innerHTML = qtyValueChoice;    //<<<< inutile
                 localStorage.setItem("product", JSON.stringify(getProduct));
                 location.reload();
               }
@@ -114,9 +100,7 @@ fetch("http://localhost:3000/api/products/")
           }
           updateQty();
 
-
-          // ----- suppression article ------
-          // ----- Obligé de boucler car en querySelectorAll, le addEventListener ne fonctionne pas sans---
+          // ----- Supression d'article-----
           function deleteQty(event) {
             let deleteBtn = document.querySelectorAll(".deleteItem");
             for (let j = 0; j < deleteBtn.length; j++) {
@@ -126,35 +110,43 @@ fetch("http://localhost:3000/api/products/")
                 console.log(article);
                 let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color);
                 console.log(checkProduct);
-                if (checkProduct != undefined);
-                getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
-                localStorage.setItem("product", JSON.stringify(getProduct));
+                if (checkProduct != undefined); {
+                  getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
+                  localStorage.setItem("product", JSON.stringify(getProduct));
+                  location.reload();
+                }
               }
               );
             }
+
           }
 
           deleteQty();
 
+          if (localStorage.getItem("product") === "[]") {
+            localStorage.clear();
+          }
+          // if (getProduct === "[]") {
+          //   localStorage.clear();
+          // }
+
         }
-      }));
+      }))
+  .catch((err) => {
+    alert("Impossible de se connecter à l'API : " + err.message);
+  });
+
+console.log(localStorage.product);
+console.log(localStorage.getItem("product"));
 
 
-// ---------------------------------------------------------
-// ---------------------------------------------------------
+
+
 // ---------------------------------------------------------
 // ---------------------------------------------------------
 // ------------Validation du formulaire --------------------
 // ---------------------------------------------------------
 // ---------------------------------------------------------
-// ---------------------------------------------------------
-// ---------------------------------------------------------
-
-
-
-// let formTest = document.querySelector(".cart__order__form__question");
-// console.log(form.firstChild.nextSibling.firstName);
-// console.log(form.firstName);
 
 // ---------------------------------------------------------
 // ------------Selection input formulaire ------------------
@@ -183,6 +175,54 @@ let formEmail = document.querySelector("#email");
 let form = document.querySelector(".cart__order__form");
 // console.log(form);
 
+
+
+// ------Fonction POST---------
+
+var send = document.getElementById("order");
+console.log(send);
+function postOrder() {
+
+  send.addEventListener("click", function (event) {
+    // event.preventDefault();
+    let productsId = [];
+    for (let i = 0; i < getProduct.length; i++) {
+      productsId.push(getProduct[i].id);
+    }
+    console.log(productsId);
+
+    let clientData = {
+      contact: {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        email: document.getElementById("email").value,
+      },
+      products: productsId,
+    }
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(clientData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+
+        localStorage.clear("product");
+        localStorage.setItem("orderId", data.orderId);
+        document.location.href = "confirmation.html";
+      })
+      .catch((err) => {
+        alert("Impossible de se connecter à l'API : " + err.message);
+      });
+
+  });
+}
 
 // ---------------------------------------------------------
 // ------------Validation des données ----------------------
@@ -214,56 +254,6 @@ formEmail.addEventListener('change', function () {
 });
 
 
-function postOrder() {
-
-  let send = document.getElementById("order");
-  send.addEventListener("click", function (event) {
-    event.preventDefault();
-    let productsId = [];
-    for (let i = 0; i < getProduct.length; i++) {
-      productsId.push(getProduct[i].id);
-    }
-    console.log(productsId);
-
-    let clientData = {
-      contact: {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        address: document.getElementById("address").value,
-        city: document.getElementById("city").value,
-        email: document.getElementById("email").value,
-      },
-      products: productsId,
-    }
-
-    console.log(clientData)
-
-
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      body: JSON.stringify(clientData),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-
-        // localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        console.log(data);
-
-        document.location.href = "confirmation.html";
-      })
-      .catch((err) => {
-        alert("Problème avec fetch : " + err.message);
-      });
-
-  });
-}
-
-
 // écoute validation formulaire complet
 form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -286,22 +276,17 @@ form.addEventListener('submit', function (e) {
 const nameFirstName = /[A-Za-z -]{2,128}$/;
 const addressRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
 const cityRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
-const emailRegex = /[A-Za-z -]{2,128}$/;                           // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
+const emailRegex = /('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')$/;                           // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
 
 
-// Regarder pour regrouper ces fonctions
-
-// Vérification du prénom
+// -----Vérification du prénom-----
 const validNameFirstName = function (validityName) {
   let testFirstName = nameFirstName.test(validityName.value);
-  // console.log(testFirstName);
-
   let testErrorName = nameFirstName.test(validityName.value);
   let error = formFirstName.nextElementSibling;
-  // console.log(error);
   if (testErrorName) {
     error.style.color = "#006600";
-    error.innerHTML = `Prénom valide`;     // voir si je peux : error.classList.add('.text-succes'); sans bootstrap;
+    error.textContent = `Prénom valide`;
     return true;
   } else if (validityName.value.length < 2) {
     error.style.color = "";
@@ -314,19 +299,16 @@ const validNameFirstName = function (validityName) {
   }
 }
 
-// Vérification du nom
+// -----Vérification du nom----
 const validName = function (validityNom) {
   let testNom = nameFirstName.test(validityNom.value);
-  // console.log(testNom);
-
   let testErrorNom = nameFirstName.test(validityNom.value);
   let error = formLastName.nextElementSibling;
-  // console.log(error);
   if (testErrorNom) {
     error.style.color = "#006600";
-    error.innerHTML = `Nom valide`;
+    error.textContent = `Nom valide`;
     return true;
-  } else if (validityName.value.length < 2) {
+  } else if (validityNom.value.length < 2) {
     error.style.color = "";
     error.textContent = "Veuillez renseigner plus de 2 lettres";
     return false;
@@ -337,17 +319,14 @@ const validName = function (validityNom) {
   }
 }
 
-// Vérification de l'adresse
+// -----Vérification de l'adresse--------
 const validAddress = function (validityAddress) {
   let testAddress = addressRegex.test(validityAddress.value);
-  // console.log(testAddress);
-
   let testErrorAddress = addressRegex.test(validityAddress.value);
   let error = formAddress.nextElementSibling;
-  // console.log(error);
   if (testErrorAddress) {
     error.style.color = "#006600";
-    error.innerHTML = `Valide`;
+    error.textContent = `Valide`;
     return true;
   } else {
     error.style.color = "";
@@ -356,17 +335,14 @@ const validAddress = function (validityAddress) {
   }
 }
 
-// Vérification de la ville
+// ----Vérification de la ville-----
 const validCity = function (validityCity) {
   let testCity = cityRegex.test(validityCity.value);
-  // console.log(testCity);
-
   let testErrorCity = addressRegex.test(validityCity.value);
   let error = formCity.nextElementSibling;
-  // console.log(error);
   if (testErrorCity) {
     error.style.color = "#006600";
-    error.innerHTML = `Nom de ville valide`;
+    error.textContent = `Nom de ville valide`;
     return true;
   } else {
     error.style.color = "";
@@ -375,17 +351,14 @@ const validCity = function (validityCity) {
   }
 }
 
-// Vérification de l'email
+// ------Vérification de l'email-------
 const validEmail = function (validityEmail) {
   let testEmail = emailRegex.test(validityEmail.value);
-  // console.log(testEmail);
-
   let testErrorEmail = addressRegex.test(validityEmail.value);
   let error = formEmail.nextElementSibling;
-  // console.log(error);
   if (testErrorEmail) {
     error.style.color = "#006600";
-    error.innerHTML = `Adresse mail valide`;
+    error.textContent = `Adresse mail valide`;
     return true;
   } else {
     error.style.color = "";
@@ -394,10 +367,6 @@ const validEmail = function (validityEmail) {
   }
 }
 
-
-function post() {
-
-}
 
 
 

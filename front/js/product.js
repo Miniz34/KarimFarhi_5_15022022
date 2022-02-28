@@ -4,8 +4,6 @@ let id = params.get("id");
 console.log(id);
 console.log(document.location);
 
-getArticle();
-
 // Affichage du produit
 function getArticle(article) {
   fetch("http://localhost:3000/api/products/" + id)
@@ -27,30 +25,23 @@ function getArticle(article) {
             colorProduct.value = colors;
             colorProduct.innerHTML = colors;
 
-
-            // console.log(id)
-            // console.log(testArticle.name)
-            // console.log(testArticle.price)
-            // console.log(colorProduct.value)
           }
-          // let select = document.getElementById('colors');
-          // for (const color of product.colors) {
-          //     let option = document.createElement("option");
-          //     option.text = color;
-          //     select.add(option);
-          // }
-
-
 
         }))
-  // REPLACER ICI SI BESOIN
-
+    .catch((err) => {
+      alert("Impossible de se connecter à l'API : ");
+    });
 
 
 }
+getArticle();
 
+
+
+// ------ Récupération des valeurs des articles, confirmation, ajout au localStorage --------
 const getProducts = function ()
-// récupération des valeurs d'articles 
+
+// récupération des valeurs d'articles
 {
   let selectColors = document.querySelector("#colors");
   let selectQuantity = document.querySelector("#quantity");
@@ -59,47 +50,35 @@ const getProducts = function ()
   let productId = testArticle._id;
   let imgUrl = testArticle.imageUrl;
   console.log(imgUrl);
-  // Tableau articles
 
+  // Tableau articles
   let itemDetails = {
     id: id,
     name: productName,
     colorSelected: selectColors.value,
     quantity: selectQuantity.value,
-    // price: price,
-    // priceTotal: price * selectQuantity,
     urlImg: imgUrl
-
   }
 
-  console.log(itemDetails);
-
   // Fenêtre confirmation
-
   const confirmation = () => {
-    if (confirm(` Votre commande de ${selectQuantity} ${selectColors} ${productName} a été ajoutée au panier, 
-    cliquez sur OK pour y accéder, ou annuler pour retourner sur la page d'accueil. `)) {
+    if (confirm(` Votre commande de a été ajoutée au panier,
+    cliquez sur OK pour y accéder, ou annuler pour continuer vos achats. `)) {
       window.location.href = "cart.html";
     } else {
       window.location.href = "index.html";
     }
   }
+
+  // ----------création du localStorage-----------
   let checkLocalStorage = JSON.parse(localStorage.getItem("product"));
-
-
-
   const initStorage = () => {
     checkLocalStorage = [];
     checkLocalStorage.push(itemDetails);
     localStorage.setItem("product", JSON.stringify(checkLocalStorage));
   }
 
-  // const addStorage = () => {
-  //   checkLocalStorage.push(itemDetails);
-  //   localStorage.setItem("product", JSON.stringify(checkLocalStorage))
-  // }
-
-
+  //----------Ajout au local storage-----------
   const addItemStorage = () => {
     checkLocalStorage.push(itemDetails);
     var data = JSON.parse(localStorage.getItem("product"));
@@ -111,36 +90,17 @@ const getProducts = function ()
     } else {
       localStorage.setItem("product", JSON.stringify(checkLocalStorage));
     }
-
   }
 
-  // console.log(checkLocalStorage[1].id); //<<<<<<<<< IMPORTANT
-  // console.log(itemDetails.id);
-  // console.log(checkLocalStorage[1].colorSelected);
-  // console.log(itemDetails.colorSelected);
-  // console.log(itemDetails.quantity);
-  // console.log(itemDetails.colorSelected.value);
-  // console.log(selectColors);
-  // console.log(selectColors);
-  // console.log(selectQuantity.value);
-
-  console.log(itemDetails.colorSelected)
-  console.log(itemDetails.colorSelected.value)
-  console.log(selectColors)
-  console.log(selectColors.value)
 
 
   if (selectColors.value && selectQuantity.value <= 99 && selectQuantity.value >= 1) {
     if (checkLocalStorage) {
       addItemStorage();
-      // confirmation();
-      // } else if (index > -1) { //(selectColors.value == itemDetails && id == itemDetails[1].id);
-      //   data[index].quantity += 1;
-      //   addItemStorage();
-      //   confirmation();
+      confirmation();
     } else {
       initStorage();
-      // confirmation();
+      confirmation();
     }
   } else {
     alert("Veuillez choisir une couleur et une quantité d'article(s) entre 1 et 100")
@@ -152,11 +112,7 @@ const getProducts = function ()
 
 let addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function (event) {
-  event.preventDefault();      // <<<<< Pas la moindre idée de l'utilité de cette ligne
+  event.preventDefault();
   getProducts();
 
-
-
 })
-
-

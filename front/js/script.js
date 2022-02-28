@@ -15,9 +15,8 @@ fetch("http://localhost:3000/api/products")
     response.json()
       .then((data) => {
         console.log(data);
+
         // Boucle affichage des objets de l'API
-
-
         for (let produit of data) {
           document.querySelector('#items').innerHTML += `<a href="./product.html?id=${produit._id}">
           <article>
@@ -32,6 +31,3 @@ fetch("http://localhost:3000/api/products")
         document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement." + error;
       }))
 
-      // // Rédaction flechée catch
-      // .catch((error) =>
-      // document.querySelector('#items').innerHTML = "Impossible de contacter l'API, merci de ressayer ultérieurement."
