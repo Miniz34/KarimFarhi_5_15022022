@@ -183,45 +183,48 @@ var send = document.getElementById("order");
 console.log(send);
 function postOrder() {
 
-  send.addEventListener("click", function (event) {
-    // event.preventDefault();
-    let productsId = [];
-    for (let i = 0; i < getProduct.length; i++) {
-      productsId.push(getProduct[i].id);
-    }
-    console.log(productsId);
+  // send.addEventListener("click", function (event) {
+  // event.preventDefault();
+  let productsId = [];
+  // for (let i = 0; i < getProduct.length; i++) {
+  //   productsId.push(getProduct[i].id);
+  // }
+  for (const product of getProduct) {
+    productsId.push(product.id);
+  }
 
-    let clientData = {
-      contact: {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        address: document.getElementById("address").value,
-        city: document.getElementById("city").value,
-        email: document.getElementById("email").value,
-      },
-      products: productsId,
-    }
+  productsId = [...new Set(productsId)];
+  console.log(productsId);
 
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      body: JSON.stringify(clientData),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+  let clientData = {
+    contact: {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
+    },
+    products: productsId,
+  }
+
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(clientData),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => {
+
+      document.location.href = "confirmation.html" + "?id=" + data.orderId;
+
     })
-      .then((response) => response.json())
-      .then((data) => {
+    .catch((err) => {
+      alert("Impossible de se connecter à l'API : " + err.message);
+    });
 
-        localStorage.clear("product");
-        localStorage.setItem("orderId", data.orderId);
-        document.location.href = "confirmation.html";
-      })
-      .catch((err) => {
-        alert("Impossible de se connecter à l'API : " + err.message);
-      });
-
-  });
 }
 
 // ---------------------------------------------------------
@@ -258,6 +261,7 @@ formEmail.addEventListener('change', function () {
 form.addEventListener('submit', function (e) {
   e.preventDefault();
   if (validNameFirstName(formFirstName) && validName(formLastName) && validAddress(formAddress) && validCity(formCity) && validEmail(formEmail)) {
+    console.log("valide");
 
     postOrder();
 

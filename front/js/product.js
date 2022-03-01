@@ -1,6 +1,7 @@
 // Id du produit issue de l'API
 let params = new URL(document.location).searchParams;
 let id = params.get("id");
+console.log(params);
 console.log(id);
 console.log(document.location);
 
