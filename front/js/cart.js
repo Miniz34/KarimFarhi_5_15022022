@@ -278,7 +278,7 @@ form.addEventListener('submit', function (e) {
 // G DONNE UNE SEQUENCE TRUE/FALSE, DEMANDER POURQUOI
 // let nameFirstName = /^([A-Za-z][A-Za-z ,.'-]*){2,}$/g;                /^[a-zA-Z]{2,20}$/;       ;  <<< bonne version
 const nameFirstName = /[A-Za-z -]{2,128}$/;
-const addressRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
+const addressRegex = /[A-Za-z0-9°-]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
 const cityRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
 const emailRegex = /('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')$/;                           // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
 
@@ -350,7 +350,7 @@ const validCity = function (validityCity) {
     return true;
   } else {
     error.style.color = "";
-    error.textContent = "Ville invalide";
+    error.textContent = "Ville invalide, le formulaire ne prend pas en compte les accents";
     return false;
   }
 }

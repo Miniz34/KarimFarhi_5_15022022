@@ -67,7 +67,7 @@ const getProducts = function ()
     cliquez sur OK pour y accéder, ou annuler pour continuer vos achats. `)) {
       window.location.href = "cart.html";
     } else {
-      window.location.href = "index.html";
+      window.location.href = window.location;
     }
   }
 
