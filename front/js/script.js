@@ -33,6 +33,20 @@
 //       }))
 
 
+
+// function async get(uri) {
+//   const response = await fetch(`${process.env.API_ENDPOINT}/${uri}`);
+//   if (response.status !== 200) {
+//       console.error('Looks like there was a problem. Status Code: ' + response.status);
+//       return;
+//   }
+
+//   return await response.json();
+// }
+
+
+
+
 function getApi() {
   return fetch("http://localhost:3000/api/products")
     .then(res => {
@@ -44,6 +58,7 @@ function getApi() {
       console.log('error :' + err);
     });
 }
+
 
 function getProductTemplate(product) {
   return `<a href="./product.html?id=${product._id}">
@@ -63,3 +78,5 @@ getApi()
       items.innerHTML += getProductTemplate(product);
     }
   })
+
+

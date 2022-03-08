@@ -4,6 +4,7 @@ let id = params.get("id");
 console.log(params);
 console.log(id);
 console.log(document.location);
+let testArticle = "";
 
 // Affichage du produit
 function getArticle(article) {
@@ -17,15 +18,17 @@ function getArticle(article) {
           document.getElementById("price").textContent = testArticle.price;
           document.getElementById("title").textContent = testArticle.name;
           document.getElementById("description").textContent = testArticle.description;
-          document.querySelector(".item__img").innerHTML = `<img src="${testArticle.imageUrl}">`;              ////rajouter le alt
-          document.querySelector("title").textContent = testArticle.name;
-          // Boucle affichage des couleurs
-          for (let colors of testArticle.colors) {
-            let colorProduct = document.createElement("option");
-            document.querySelector("#colors").appendChild(colorProduct);
-            colorProduct.value = colors;
-            colorProduct.innerHTML = colors;
+          document.getElementsByClassName("item__img")[0].innerHTML = `<img src="${testArticle.imageUrl}" alt="${testArticle.altTxt}">`;
+          document.getElementById("title").textContent = testArticle.name;
+          console.log(testArticle);
 
+
+          // Boucle affichage des couleurs
+          let select = document.getElementById("colors");
+          for (let color of testArticle.colors) {
+            let option = document.createElement("option");
+            option.text = color;
+            select.add(option);
           }
 
         }))
@@ -50,7 +53,6 @@ const getProducts = function ()
   let productName = testArticle.name;
   let productId = testArticle._id;
   let imgUrl = testArticle.imageUrl;
-  console.log(imgUrl);
 
   // Tableau articles
   let itemDetails = {
@@ -117,3 +119,7 @@ addToCart.addEventListener("click", function (event) {
   getProducts();
 
 })
+
+// document.getElementById("addToCart").onclick = getProducts();
+
+
