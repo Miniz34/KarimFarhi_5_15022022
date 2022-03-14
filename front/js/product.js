@@ -43,7 +43,7 @@ getArticle();
 
 
 // ------ Récupération des valeurs des articles, confirmation, ajout au localStorage --------
-const getProducts = function ()
+const getProducts = function (event)
 
 // récupération des valeurs d'articles
 {
@@ -53,6 +53,7 @@ const getProducts = function ()
   let productName = testArticle.name;
   let productId = testArticle._id;
   let imgUrl = testArticle.imageUrl;
+  let altImg = testArticle.altTxt;
 
   // Tableau articles
   let itemDetails = {
@@ -60,7 +61,8 @@ const getProducts = function ()
     name: productName,
     colorSelected: selectColors.value,
     quantity: selectQuantity.value,
-    urlImg: imgUrl
+    urlImg: imgUrl,
+    alt: altImg
   }
 
   // Fenêtre confirmation
@@ -114,12 +116,13 @@ const getProducts = function ()
 // Fonction ajouter au panier avec écoute du clic
 
 let addToCart = document.getElementById("addToCart");
-addToCart.addEventListener("click", function (event) {
-  event.preventDefault();
-  getProducts();
+addToCart.onclick = getProducts;
+// addToCart.addEventListener("click", function (event) {
+//   event.preventDefault();
+//   getProducts();
 
-})
+// })
 
-// document.getElementById("addToCart").onclick = getProducts();
+
 
 

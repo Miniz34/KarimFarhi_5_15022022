@@ -33,6 +33,7 @@ fetch("http://localhost:3000/api/products/")
             let nameProduct = getProduct[i].name;
             let quantityProduct = getProduct[i].quantity;
             let imgUrl = getProduct[i].urlImg;
+            let alt = getProduct[i].alt;
 
             // --- récupération du prix ---
             let checkProduct = data.find(item => item._id == idProduct);
@@ -45,7 +46,7 @@ fetch("http://localhost:3000/api/products/")
             // Ajout des articles sur la page
             articles.innerHTML += `<article class="cart__item" data-id="${idProduct}" data-color="${colorProduct}">
                 <div class="cart__item__img">
-                  <img src="${imgUrl}" alt="Photographie d'un canapé">
+                  <img src="${imgUrl}" alt="${alt}">
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
@@ -83,49 +84,95 @@ fetch("http://localhost:3000/api/products/")
 
 
           // ----modif quantités----
-          function updateQty(event) {
-            let qty = document.querySelector(".cart__item__content__settings__quantity");
-            qty.addEventListener("change", (event) => {
-              let qtyValueChoice = event.target.value;
-              let article = event.target.closest('article');
-              let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color)
-              console.log(checkProduct);
-              if (checkProduct != undefined) {
-                checkProduct.quantity = qtyValueChoice;
-                localStorage.setItem("product", JSON.stringify(getProduct));
-                location.reload();
-              }
-            });
+          // function updateQty(event) {
+          //   let qtyBtn = document.getElementById("cart__items");
+          //   qtyBtn.addEventListener("change", (event) => {
+          //     let qtyValueChoice = event.target.value;
+          //     let article = event.target.closest('article');
+          //     let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color)
+          //     console.log(checkProduct);
+          //     if (checkProduct != undefined) {
+          //       checkProduct.quantity = qtyValueChoice;
+          //       localStorage.setItem("product", JSON.stringify(getProduct));
+          //       location.reload();
+          //     }
+          //   });
+          // }
+          // updateQty();
 
+
+
+          function updateQuantite(event) {
+            let article = event.target.closest('article');
+            let itemFound = getProduct.find(item => item.id === article.dataset.id && item.colorSelected === article.dataset.color)
+            itemFound.quantity = parseInt(event.target.value);
+            window.localStorage.setItem('product', JSON.stringify(getProduct))
+            location.reload();
           }
-          updateQty();
 
-          // ----- Supression d'article-----
-          function deleteQty(event) {
-            let deleteBtn = document.querySelectorAll(".deleteItem");
-            for (let j = 0; j < deleteBtn.length; j++) {
-              deleteBtn[j].addEventListener("click", (event) => {
-                let article = event.target.closest('article');
-                console.log(deleteBtn);
-                console.log(article);
-                let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color);
-                console.log(checkProduct);
-                if (checkProduct != undefined); {
-                  getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
-                  localStorage.setItem("product", JSON.stringify(getProduct));
-                  location.reload();
-                }
-              }
-              );
+          function removeItem(event) {
+            let article = event.target.closest('article');
+            let checkProduct = getProduct.filter(item => item.id !== article.dataset.id || item.colorSelected !== article.dataset.color)
+            if (checkProduct != undefined) {
+              getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
+              localStorage.setItem('product', JSON.stringify(getProduct))
+              article.remove();
+            }
+          }
+
+
+          let cart = JSON.parse(window.localStorage.getItem("product")) ?? [];
+
+          if (cart.length) {
+            let cartProduct = document.getElementById('cart__items');
+            cartProduct.onchange = updateQuantite;
+
+            let deleteItems = document.getElementsByClassName('deleteItem');
+            for (const deleteitem of deleteItems) {
+              deleteitem.onclick = removeItem;
             }
 
           }
 
-          deleteQty();
 
-          if (localStorage.getItem("product") === "[]") {
-            localStorage.clear();
-          }
+
+
+
+          // if (getProduct.length) {
+          //   for (const product of getProduct)
+          //     cartProduct.innerHTML += "5";
+          //   cartProduct.onchange = updateQuantite;
+          // }
+          // console.log(cartProduct);
+
+
+
+          // ----- Supression d'article-----
+          // function deleteQty(event) {
+          //   let deleteBtn = document.querySelectorAll(".deleteItem");
+          //   for (let j = 0; j < deleteBtn.length; j++) {
+          //     deleteBtn[j].addEventListener("click", (event) => {
+          //       let article = event.target.closest('article');
+          //       console.log(deleteBtn);
+          //       console.log(article);
+          //       let checkProduct = getProduct.find(item => item.id == article.dataset.id && item.colorSelected == article.dataset.color);
+          //       console.log(checkProduct);
+          //       if (checkProduct != undefined); {
+          //         getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
+          //         localStorage.setItem("product", JSON.stringify(getProduct));
+          //         location.reload();
+          //       }
+          //     }
+          //     );
+          //   }
+
+          // }
+
+          // deleteQty();
+
+          // if (localStorage.getItem("product") === "[]") {
+          //   localStorage.clear();
+          // }
           // if (getProduct === "[]") {
           //   localStorage.clear();
           // }
@@ -136,8 +183,6 @@ fetch("http://localhost:3000/api/products/")
     alert("Impossible de se connecter à l'API : " + err.message);
   });
 
-console.log(localStorage.product);
-console.log(localStorage.getItem("product"));
 
 
 
