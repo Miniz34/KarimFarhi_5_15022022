@@ -83,6 +83,22 @@ fetch("http://localhost:3000/api/products/")
 
 
 
+          let cart = JSON.parse(window.localStorage.getItem("product")) ?? [];
+
+          if (cart.length) {
+            let cartProduct = document.getElementById('cart__items');
+            cartProduct.onchange = updateQuantite;
+            console.log("bonjours");
+
+            let deleteItems = document.getElementsByClassName('deleteItem');
+            for (const deleteitem of deleteItems) {
+              deleteitem.onclick = removeItem;
+              console.log("test");
+            }
+
+          }
+
+
           // ----modif quantités----
           // function updateQty(event) {
           //   let qtyBtn = document.getElementById("cart__items");
@@ -99,43 +115,6 @@ fetch("http://localhost:3000/api/products/")
           //   });
           // }
           // updateQty();
-
-
-
-          function updateQuantite(event) {
-            let article = event.target.closest('article');
-            let itemFound = getProduct.find(item => item.id === article.dataset.id && item.colorSelected === article.dataset.color)
-            itemFound.quantity = parseInt(event.target.value);
-            window.localStorage.setItem('product', JSON.stringify(getProduct))
-            location.reload();
-          }
-
-          function removeItem(event) {
-            let article = event.target.closest('article');
-            let checkProduct = getProduct.filter(item => item.id !== article.dataset.id || item.colorSelected !== article.dataset.color)
-            if (checkProduct != undefined) {
-              getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
-              localStorage.setItem('product', JSON.stringify(getProduct))
-              article.remove();
-            }
-          }
-
-
-          let cart = JSON.parse(window.localStorage.getItem("product")) ?? [];
-
-          if (cart.length) {
-            let cartProduct = document.getElementById('cart__items');
-            cartProduct.onchange = updateQuantite;
-
-            let deleteItems = document.getElementsByClassName('deleteItem');
-            for (const deleteitem of deleteItems) {
-              deleteitem.onclick = removeItem;
-            }
-
-          }
-
-
-
 
 
           // if (getProduct.length) {
@@ -184,6 +163,23 @@ fetch("http://localhost:3000/api/products/")
   });
 
 
+function updateQuantite(event) {
+  let article = event.target.closest('article');
+  let itemFound = getProduct.find(item => item.id === article.dataset.id && item.colorSelected === article.dataset.color)
+  itemFound.quantity = parseInt(event.target.value);
+  window.localStorage.setItem('product', JSON.stringify(getProduct))
+  location.reload();
+}
+
+function removeItem(event) {
+  let article = event.target.closest('article');
+  let checkProduct = getProduct.filter(item => item.id !== article.dataset.id || item.colorSelected !== article.dataset.color)
+  if (checkProduct != undefined) {
+    getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
+    localStorage.setItem('product', JSON.stringify(getProduct))
+    article.remove();
+  }
+}
 
 
 
@@ -322,10 +318,10 @@ form.addEventListener('submit', function (e) {
 
 // G DONNE UNE SEQUENCE TRUE/FALSE, DEMANDER POURQUOI
 // let nameFirstName = /^([A-Za-z][A-Za-z ,.'-]*){2,}$/g;                /^[a-zA-Z]{2,20}$/;       ;  <<< bonne version
-const nameFirstName = /[A-Za-z -]{2,128}$/;
-const addressRegex = /[A-Za-z0-9°-]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
-const cityRegex = /[A-Za-z -]{2,128}$/;                               // /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
-const emailRegex = /('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')$/;                           // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
+const nameFirstName = /[-a-zA-Zàâäéèêëïîôöùûüç]{2,128}$/;
+const addressRegex = /[A-Za-z0-9°àâäéèêëïîôöùûüç-]{2,128}$/;                               // /(?=^.{5,255}$)^\w+(\s\w+){2,}$/;                          //  a refaire
+const cityRegex = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;                               // /(?=^.{1,128}$)^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/;                // a refaire
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;               //  /('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$')$/;        // /(?=^.{5,255}$)^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,})$/;
 
 
 // -----Vérification du prénom-----
@@ -387,7 +383,7 @@ const validAddress = function (validityAddress) {
 // ----Vérification de la ville-----
 const validCity = function (validityCity) {
   let testCity = cityRegex.test(validityCity.value);
-  let testErrorCity = addressRegex.test(validityCity.value);
+  let testErrorCity = cityRegex.test(validityCity.value);
   let error = formCity.nextElementSibling;
   if (testErrorCity) {
     error.style.color = "#006600";
@@ -403,7 +399,7 @@ const validCity = function (validityCity) {
 // ------Vérification de l'email-------
 const validEmail = function (validityEmail) {
   let testEmail = emailRegex.test(validityEmail.value);
-  let testErrorEmail = addressRegex.test(validityEmail.value);
+  let testErrorEmail = emailRegex.test(validityEmail.value);
   let error = formEmail.nextElementSibling;
   if (testErrorEmail) {
     error.style.color = "#006600";
