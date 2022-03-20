@@ -4,7 +4,7 @@ let id = params.get("id");
 console.log(params);
 console.log(id);
 console.log(document.location);
-let testArticle = "";
+let productApi = "";
 
 // Affichage du produit
 function getArticle(article) {
@@ -13,19 +13,19 @@ function getArticle(article) {
       response.json()
         .then((data) => {
           console.log(data);
-          testArticle = data;
+          productApi = data;
           // Affichage des caractéristiques du produit via l'API : prix, nom, description, image
-          document.getElementById("price").textContent = testArticle.price;
-          document.getElementById("title").textContent = testArticle.name;
-          document.getElementById("description").textContent = testArticle.description;
-          document.getElementsByClassName("item__img")[0].innerHTML = `<img src="${testArticle.imageUrl}" alt="${testArticle.altTxt}">`;
-          document.getElementById("title").textContent = testArticle.name;
-          console.log(testArticle);
+          document.getElementById("price").textContent = productApi.price;
+          document.getElementById("title").textContent = productApi.name;
+          document.getElementById("description").textContent = productApi.description;
+          document.getElementsByClassName("item__img")[0].innerHTML = `<img src="${productApi.imageUrl}" alt="${productApi.altTxt}">`;
+          document.getElementById("title").textContent = productApi.name;
+
 
 
           // Boucle affichage des couleurs
           let select = document.getElementById("colors");
-          for (let color of testArticle.colors) {
+          for (let color of productApi.colors) {
             let option = document.createElement("option");
             option.text = color;
             select.add(option);
@@ -49,11 +49,11 @@ const getProducts = function (event)
 {
   let selectColors = document.querySelector("#colors");
   let selectQuantity = document.querySelector("#quantity");
-  let price = testArticle.price;
-  let productName = testArticle.name;
-  let productId = testArticle._id;
-  let imgUrl = testArticle.imageUrl;
-  let altImg = testArticle.altTxt;
+  let price = productApi.price;
+  let productName = productApi.name;
+  let productId = productApi._id;
+  let imgUrl = productApi.imageUrl;
+  let altImg = productApi.altTxt;
 
   // Tableau articles
   let itemDetails = {
@@ -87,9 +87,9 @@ const getProducts = function (event)
   const addItemStorage = () => {
     checkLocalStorage.push(itemDetails);
     var data = JSON.parse(localStorage.getItem("product"));
-    let index = data.findIndex(item => item.id == itemDetails.id && item.colorSelected == itemDetails.colorSelected);           //Fonction qui déclare condition, et renvoi premier index qui valide condition
-    if (index > -1) {                                                                                                           // Renvoi -1 si "index" ne trouve rien
-      data[index].quantity = parseInt(selectQuantity.value) + parseInt(data[index].quantity);                                    //Array[fonction findex].titre d'objet
+    let index = data.findIndex(item => item.id == itemDetails.id && item.colorSelected == itemDetails.colorSelected);
+    if (index > -1) {
+      data[index].quantity = parseInt(selectQuantity.value) + parseInt(data[index].quantity);
       console.log(typeof (data[index].quantity));
       localStorage.setItem("product", JSON.stringify(data));
     } else {
@@ -117,11 +117,7 @@ const getProducts = function (event)
 
 let addToCart = document.getElementById("addToCart");
 addToCart.onclick = getProducts;
-// addToCart.addEventListener("click", function (event) {
-//   event.preventDefault();
-//   getProducts();
 
-// })
 
 
 
