@@ -1,8 +1,6 @@
+// Page d'accueil utilisant la méthode MVC
 
-
-
-
-
+// Appel de l'API pour obtenir la liste de produits (Modèle)
 function getApi() {
   return fetch("http://localhost:3000/api/products")
     .then(res => {
@@ -16,6 +14,7 @@ function getApi() {
 }
 
 
+// Utilisation du template produits du front-end (Vue)
 function getProductTemplate(product) {
   return `<a href="./product.html?id=${product._id}">
             <article>
@@ -26,8 +25,10 @@ function getProductTemplate(product) {
            </a>`;
 }
 
+
 let items = document.getElementById("items");
 
+// Application des données de l'API au modèle du front-end (contrôleur)
 getApi()
   .then(products => {
     for (const product of products) {

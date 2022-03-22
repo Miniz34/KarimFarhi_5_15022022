@@ -118,6 +118,7 @@ function removeItem(event) {
     getProduct = getProduct.filter(art => art.id !== article.dataset.id || art.colorSelected !== article.dataset.color);
     localStorage.setItem('product', JSON.stringify(getProduct))
     article.remove();
+    location.reload();
   }
 }
 
@@ -285,7 +286,7 @@ const validEmail = function (validityEmail) {
   }
 }
 
-// ------Fonction POST---------
+// ------Fonction POST, envoi des informations clients et du contenu de la commande---------
 
 var send = document.getElementById("order");
 console.log(send);
@@ -323,7 +324,7 @@ function postOrder() {
     .then((response) => response.json())
     .then((data) => {
 
-      document.location.href = "confirmation.html" + "?id=" + data.orderId;
+      document.location.href = `confirmation.html?id=${data.orderId}`;
 
     })
     .catch((err) => {
